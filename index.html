@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SusParty - The Ultimate Social Deduction Game</title>
+    <meta name="description" content="SusParty is the ultimate mobile social deduction party game. Find the imposters, complete tasks, and have fun with friends!">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6C5CE7;
+            --primary-dark: #5849c4;
+            --secondary: #FF6B6B;
+            --accent: #00D2D3;
+            --dark: #1a1a2e;
+            --darker: #12121f;
+            --light: #ffffff;
+            --gray: #a0a0b0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(18, 18, 31, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--light);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(108, 92, 231, 0.15) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 107, 107, 0.1) 0%, transparent 70%);
+            bottom: -100px;
+            left: -100px;
+        }
+
+        .hero .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--gray);
+            margin-bottom: 32px;
+            max-width: 500px;
+        }
+
+        .app-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .app-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 28px;
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--light);
+            transition: all 0.3s;
+        }
+
+        .app-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .app-btn svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .app-btn-text {
+            text-align: left;
+        }
+
+        .app-btn-text small {
+            font-size: 11px;
+            color: var(--gray);
+            display: block;
+        }
+
+        .app-btn-text span {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .hero-image {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .phone-mockup {
+            width: 300px;
+            height: 600px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 40px;
+            padding: 12px;
+            box-shadow: 0 50px 100px rgba(108, 92, 231, 0.3);
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            border-radius: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 0;
+            background: var(--dark);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section-header p {
+            color: var(--gray);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: var(--darker);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            font-size: 15px;
+        }
+
+        /* Premium Section */
+        .premium {
+            padding: 120px 0;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+        }
+
+        .premium-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .premium-features {
+            list-style: none;
+        }
+
+        .premium-features li {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .premium-features li:last-child {
+            border-bottom: none;
+        }
+
+        .check-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Support Section */
+        .support {
+            padding: 120px 0;
+            background: var(--dark);
+        }
+
+        .support-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .support-info h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .support-info p {
+            color: var(--gray);
+            margin-bottom: 24px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+        }
+
+        .contact-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--darker);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .contact-item a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 120px 0;
+            background: var(--darker);
+        }
+
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 17px;
+        }
+
+        .faq-question:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .faq-answer {
+            padding: 0 24px 24px;
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 0 30px;
+            background: var(--dark);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand p {
+            color: var(--gray);
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        .footer-links h4 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            color: var(--gray);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero .container,
+            .premium-content,
+            .support-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .hero p {
+                margin: 0 auto 32px;
+            }
+
+            .app-buttons {
+                justify-content: center;
+            }
+
+            .hero-image {
+                order: -1;
+            }
+
+            .phone-mockup {
+                width: 240px;
+                height: 480px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .section-header h2 {
+                font-size: 28px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .app-buttons {
+                flex-direction: column;
+            }
+
+            .app-btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="logo">Sus<span>Party</span></div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#premium">Premium</a></li>
+                <li><a href="#support">Support</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>The Ultimate <span>Social Deduction</span> Party Game</h1>
+                <p>Gather your friends, find the imposters, complete tasks, and have the most fun you've ever had at a party. Available now on iOS!</p>
+                <div class="app-buttons">
+                    <a href="#" class="app-btn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 22 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.09997 22C7.78997 22.05 6.79997 20.68 5.95997 19.47C4.24997 17 2.93997 12.45 4.69997 9.39C5.56997 7.87 7.12997 6.91 8.81997 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/>
+                        </svg>
+                        <div class="app-btn-text">
+                            <small>Download on the</small>
+                            <span>App Store</span>
+                        </div>
+                    </a>
+                    <a href="#" class="app-btn" style="opacity: 0.5; pointer-events: none;">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 010 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.802 8.99l-2.303 2.303-8.635-8.635z"/>
+                        </svg>
+                        <div class="app-btn-text">
+                            <small>Coming soon on</small>
+                            <span>Google Play</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        &#129335;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why You'll Love SusParty</h2>
+                <p>Everything you need for the perfect party game experience</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">&#127918;</div>
+                    <h3>Easy to Play</h3>
+                    <p>Simple rules that anyone can learn in seconds. Perfect for parties with friends and family of all ages.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#128101;</div>
+                    <h3>Multiplayer Fun</h3>
+                    <p>Play with your friends locally or online. The more players, the more chaos and fun!</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#127912;</div>
+                    <h3>Customizable Games</h3>
+                    <p>Adjust game settings, roles, and rules to create your perfect party game experience.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#128640;</div>
+                    <h3>Quick Rounds</h3>
+                    <p>Fast-paced games that keep everyone engaged. Perfect for short bursts of fun!</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#127942;</div>
+                    <h3>Leaderboards</h3>
+                    <p>Compete with friends and track your wins. Show off your detective skills!</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#128274;</div>
+                    <h3>Private Rooms</h3>
+                    <p>Create private game rooms with custom codes. Play only with the people you want.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Premium Section -->
+    <section class="premium" id="premium">
+        <div class="container">
+            <div class="premium-content">
+                <div>
+                    <div class="section-header" style="text-align: left; margin-bottom: 40px;">
+                        <h2>Unlock Premium</h2>
+                        <p>Take your game to the next level with exclusive premium features</p>
+                    </div>
+                    <ul class="premium-features">
+                        <li>
+                            <div class="check-icon">&#10003;</div>
+                            <span>Remove all advertisements</span>
+                        </li>
+                        <li>
+                            <div class="check-icon">&#10003;</div>
+                            <span>Exclusive character skins and customizations</span>
+                        </li>
+                        <li>
+                            <div class="check-icon">&#10003;</div>
+                            <span>Access to special game modes</span>
+                        </li>
+                        <li>
+                            <div class="check-icon">&#10003;</div>
+                            <span>Priority matchmaking</span>
+                        </li>
+                        <li>
+                            <div class="check-icon">&#10003;</div>
+                            <span>Support indie game development</span>
+                        </li>
+                    </ul>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 40px; border-radius: 24px; text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">&#11088;</div>
+                        <h3 style="font-size: 28px; margin-bottom: 8px;">Premium</h3>
+                        <p style="opacity: 0.8; margin-bottom: 24px;">One-time purchase</p>
+                        <a href="#" class="app-btn" style="background: white; color: var(--dark);">
+                            <span style="font-weight: 700;">Get Premium</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Section -->
+    <section class="support" id="support">
+        <div class="container">
+            <div class="section-header">
+                <h2>Support</h2>
+                <p>We're here to help you with any questions or issues</p>
+            </div>
+            <div class="support-grid">
+                <div class="support-info">
+                    <h3>Contact Us</h3>
+                    <p>Have a question, found a bug, or want to share feedback? We'd love to hear from you!</p>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">&#9993;</div>
+                        <div>
+                            <strong>Email Support</strong><br>
+                            <a href="mailto:support@susparty.com">support@susparty.com</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">&#128172;</div>
+                        <div>
+                            <strong>Response Time</strong><br>
+                            <span style="color: var(--gray);">We typically respond within 24-48 hours</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">&#128736;</div>
+                        <div>
+                            <strong>Report Issues</strong><br>
+                            <a href="https://github.com/launchesoneth-glitch/SusParty/issues" target="_blank">GitHub Issues</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="support-info">
+                    <h3>Common Topics</h3>
+                    <p>Quick answers to frequent questions:</p>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">&#128179;</div>
+                        <div>
+                            <strong>Billing & Purchases</strong><br>
+                            <span style="color: var(--gray);">In-app purchases are handled by Apple. For refunds, contact Apple Support.</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">&#128272;</div>
+                        <div>
+                            <strong>Account Issues</strong><br>
+                            <span style="color: var(--gray);">Email us with your account details and we'll help you out.</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">&#128030;</div>
+                        <div>
+                            <strong>Bug Reports</strong><br>
+                            <span style="color: var(--gray);">Include your device model and iOS version when reporting bugs.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Quick answers to common questions</p>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I play SusParty?</span>
+                        <span>&#9660;</span>
+                    </div>
+                    <div class="faq-answer">
+                        SusParty is a social deduction game where players are assigned roles - some are crew members trying to complete tasks, while others are imposters trying to sabotage the crew without getting caught. Use discussion and voting to find and eliminate the imposters!
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How many players do I need?</span>
+                        <span>&#9660;</span>
+                    </div>
+                    <div class="faq-answer">
+                        SusParty works best with 4-10 players, but you can play with as few as 4. The more players you have, the more exciting and unpredictable the game becomes!
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is SusParty free to play?</span>
+                        <span>&#9660;</span>
+                    </div>
+                    <div class="faq-answer">
+                        Yes! SusParty is free to download and play. We offer an optional Premium upgrade that removes ads and unlocks exclusive features, but all core gameplay is completely free.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I restore my Premium purchase?</span>
+                        <span>&#9660;</span>
+                    </div>
+                    <div class="faq-answer">
+                        If you've previously purchased Premium and need to restore it (for example, on a new device), go to Settings in the app and tap "Restore Purchases." Make sure you're signed in with the same Apple ID you used for the original purchase.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I get a refund for my purchase?</span>
+                        <span>&#9660;</span>
+                    </div>
+                    <div class="faq-answer">
+                        All purchases are processed through Apple. To request a refund, visit reportaproblem.apple.com and sign in with your Apple ID. Apple handles all refund requests for App Store purchases.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is my data safe?</span>
+                        <span>&#9660;</span>
+                    </div>
+                    <div class="faq-answer">
+                        Yes! We take your privacy seriously. We only collect minimal data necessary for gameplay and analytics. We never sell your personal information. Read our full Privacy Policy for more details.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">Sus<span>Party</span></div>
+                    <p>The ultimate social deduction party game. Gather your friends, find the imposters, and have fun!</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Game</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#premium">Premium</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#support">Contact Us</a></li>
+                        <li><a href="mailto:support@susparty.com">Email</a></li>
+                        <li><a href="https://github.com/launchesoneth-glitch/SusParty/issues">Report Bug</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 SusParty. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
